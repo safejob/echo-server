@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,19 +17,21 @@ func main() {
 	router := gin.Default()
 
 	router.Any("/*id", func(c *gin.Context) {
-		//b, _ := json.Marshal(c.Request.Header)
-		// b := fmt.Sprintf("%#+v\n", c.Request.Header)
-		fmt.Println()
+		fmt.Println("<================= 请求属性 ====================>")
 		fmt.Printf("Host => %s\nMethod => %s\nHTTP => %s\nRemoteAddr => %s\nRequestURI => %s\nURL => %s\n",
 			c.Request.Host, c.Request.Method, c.Request.Proto,
 			c.Request.RemoteAddr, c.Request.RequestURI, c.Request.URL)
-		fmt.Println("-----")
 
+		fmt.Println("<================= 请求头 ====================>")
 		for k, v := range c.Request.Header {
 			for i, j := range v {
 				fmt.Printf("%s -> %d: %s\n", k, i, j)
 			}
 		}
+
+		fmt.Println("<================= 请求体 ====================>")
+		body, _ := ioutil.ReadAll(c.Request.Body)
+		fmt.Println(string(body))
 
 		//c.String(200, c.Param("id"))
 		//c.String(200, string(b))
