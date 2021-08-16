@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,7 @@ import (
 func main() {
 	Port := flag.String("p", "8080", "服务监听端口")
 	Code := flag.Int("s", 200, "响应状态码")
+	Time := flag.Int("t", 0, "等待多长时间响应 单位毫秒 1s=1000ms")
 	flag.Parse()
 
 	gin.SetMode(gin.ReleaseMode)
@@ -32,6 +34,10 @@ func main() {
 		fmt.Println("<================= 请求体 ====================>")
 		body, _ := ioutil.ReadAll(c.Request.Body)
 		fmt.Println(string(body))
+
+		if *Time > 0 {
+			time.Sleep(time.Millisecond * time.Duration(*Time))
+		}
 
 		//c.String(200, c.Param("id"))
 		//c.String(200, string(b))
