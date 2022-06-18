@@ -13,6 +13,7 @@ func main() {
 	Port := flag.String("p", "8080", "服务监听端口")
 	Code := flag.Int("s", 200, "响应状态码")
 	Time := flag.Int("t", 0, "等待多长时间响应 单位毫秒 1s=1000ms")
+	Resp := flag.String("resp", "", "响应体内容 json格式 -resp '{\\\"version\\\":\\\"2.3.3\\\"}'")
 	flag.Parse()
 
 	gin.SetMode(gin.ReleaseMode)
@@ -41,7 +42,11 @@ func main() {
 
 		//c.String(200, c.Param("id"))
 		//c.String(200, string(b))
-		c.JSON(*Code, c.Request.Header)
+		if *Resp != "" {
+			c.Data(200, "application/json", []byte(*Resp))
+		} else {
+			c.JSON(*Code, c.Request.Header)
+		}
 	})
 
 	router.Run(":" + *Port)
